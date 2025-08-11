@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Race-To Shot Clock</title>
+
+<!-- PWA meta -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6d7b62">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+<style>
+/* your CSS stays exactly the same — paste from the last working version */
+</style>
+</head>
+<body>
+
+<!-- your HTML content stays exactly the same — paste from the last working version -->
+
+<script>
+/* your JS logic stays exactly the same — paste from the last working version */
+
+/* Register the service worker for offline use */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('service-worker.js')
+      .then(() => console.log('Service Worker registered'));
+  });
+}
+</script>
+</body>
+</html>
