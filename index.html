@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Nineball Timer</title>
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="style.css">
+<meta name="theme-color" content="#6f3ad3">
+</head>
+<body>
+
+<canvas id="confetti"></canvas>
+<div id="toast"></div>
+
+<div class="container">
+  <div class="grid">
+
+    <div class="race-wrap">
+      <div class="race-title">Race to</div>
+      <div class="race-value" id="raceTo">8</div>
+    </div>
+
+    <div class="left name" id="p1Name">Player1</div>
+    <div class="right name" id="p2Name">Player2</div>
+
+    <div class="left score" id="p1Score">0</div>
+    <div class="clock" id="clock">30</div>
+    <div class="right score" id="p2Score">0</div>
+
+    <button class="left btn playing" id="p1Playing">
+      <img src="assets/buttons/p1-playing.png" alt="P1 Playing">
+    </button>
+    <div class="logo"><img src="assets/logo.png" alt="Logo"></div>
+    <button class="right btn playing" id="p2Playing">
+      <img src="assets/buttons/p2-playing.png" alt="P2 Playing">
+    </button>
+
+    <div class="middle"><button class="btn white" id="pauseBtn"><img src="assets/buttons/pause.png" alt="Pause"></button></div>
+
+    <button class="left btn" id="p1Plus"><img src="assets/buttons/p1-plus.png" alt="+1 P1"></button>
+    <button class="middle btn white" id="startBtn"><img src="assets/buttons/start.png" alt="Start"></button>
+    <button class="right btn" id="p2Plus"><img src="assets/buttons/p2-plus.png" alt="+1 P2"></button>
+
+    <button class="left btn" id="p1Ext"><img src="assets/buttons/p1-extension.png" alt="P1 Ext"></button>
+    <button class="middle btn white" id="resetClock"><img src="assets/buttons/reset-clock.png" alt="Reset Clock"></button>
+    <button class="right btn" id="p2Ext"><img src="assets/buttons/p2-extension.png" alt="P2 Ext"></button>
+
+    <button class="left btn small" id="editP1"><img src="assets/buttons/edit-p1.png" alt="Edit P1"></button>
+    <button class="middle btn small" id="editRace"><img src="assets/buttons/edit-race.png" alt="Edit Race"></button>
+    <button class="right btn small" id="editP2"><img src="assets/buttons/edit-p2.png" alt="Edit P2"></button>
+
+    <div class="middle"><button class="btn white" id="resetScore"><img src="assets/buttons/reset-score.png" alt="Reset Score"></button></div>
+
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
