@@ -1,0 +1,144 @@
+:root {
+  --bg1: #2f4f2f;
+  --bg2: #1d2b1d;
+  --gold: #d4af37;
+  --btn-shadow: #0007;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  background: linear-gradient(180deg, var(--bg1), var(--bg2));
+  background-image: url("assets/background/gradient-fallback.png");
+  background-size: cover;
+  background-position: center;
+  color: #fff;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 10px;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  grid-auto-rows: min-content;
+  gap: 12px;
+  align-items: center;
+  justify-items: center;
+}
+
+.race-wrap {
+  grid-column: 1 / span 3;
+  text-align: center;
+}
+
+.race-title {
+  font-weight: 700;
+  font-size: 24px;
+}
+
+.race-value {
+  font-weight: 900;
+  font-size: 28px;
+}
+
+.name {
+  font-size: 28px;
+  font-weight: 800;
+  text-shadow: 0 2px 0 #0005;
+}
+
+.name.win {
+  color: var(--gold);
+}
+.name.lose {
+  color: #000;
+}
+
+.score {
+  font-size: 40px;
+  font-weight: 900;
+  text-shadow: 0 2px 0 #0005;
+}
+
+.clock {
+  font-size: 120px;
+  font-weight: 900;
+  line-height: 1;
+  text-shadow: 0 4px 0 #0005;
+}
+.clock.red {
+  color: #ffefef;
+  text-shadow: 0 0 20px #ff000055, 0 4px 0 #0005;
+}
+
+.logo img {
+  max-width: 80px;
+  max-height: 80px;
+}
+
+.btn {
+  background: none;
+  border: none;
+  padding: 0;
+  box-shadow: 0 4px 8px var(--btn-shadow);
+}
+.btn img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+.btn.white {
+  background: none;
+}
+.btn.small img {
+  max-width: 80px;
+}
+
+.playing.active img {
+  filter: hue-rotate(270deg) brightness(1.1);
+}
+
+#toast {
+  position: fixed;
+  left: 50%;
+  top: 15%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, .75);
+  color: #fff;
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-weight: 800;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .15s ease;
+  z-index: 10;
+}
+#toast.show {
+  opacity: 1;
+}
+
+#confetti {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .logo {
+    order: -1;
+  }
+  .clock {
+    font-size: 80px;
+  }
+}
