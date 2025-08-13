@@ -1,0 +1,21 @@
+{
+  "name": "Nineball Timer",
+  "short_name": "Nineball",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#6d7b62",
+  "theme_color": "#6f3ad3",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "assets/logo.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "assets/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
