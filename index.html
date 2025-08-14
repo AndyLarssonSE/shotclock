@@ -3,146 +3,103 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>AndyLarsson.se – Pool & Billiard Timer</title>
+<title>Pool & Billiard Timer</title>
 <style>
   :root{
-    --bg:#0b0b0f;
-    --panel:#14151c;
-    --text:#f7f7f7;
-    --muted:#bfc5d1;
-    --accent:#ff6e8a;
-    --accent2:#8ec5ff;
-    --btn:#2a2c36;
-    --btn-hi:#3a3d4b;
-    --success:#78ffa1;
-    --danger:#ff7b7b;
-    --divider:#e3f2f1;
+    --bg-top:#282727;   /* requested gradient */
+    --bg-bot:#161616;
+    --text:#ffffff;
+    --muted:#cfd3d8;
+    --divider:#e7f0ee;
   }
+
   *{box-sizing:border-box}
   html,body{height:100%}
   body{
     margin:0;
-    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-    background: radial-gradient(1200px 800px at 50% -10%, #1b1e27, var(--bg));
     color:var(--text);
+    font-family: ui-sans-serif, -apple-system, "Segoe UI", Roboto, Helvetica, Arial;
+    background: linear-gradient(to bottom, var(--bg-top), var(--bg-bot));
+    user-select:none;
+    -webkit-tap-highlight-color: transparent;
   }
 
-  /* Top bar (names + scores + race) */
+  /* Header: names + race */
   .top{
     display:grid;
     grid-template-columns: 1fr auto 1fr;
-    align-items:end;
     gap:12px;
-    padding:16px 14px 8px;
+    padding:14px 14px 0;
+    align-items:end;
     text-transform:uppercase;
-    font-weight:800;
     letter-spacing:.06em;
+    font-weight:900;
   }
-  .top small{display:block; color:var(--muted); font-weight:700; margin-bottom:4px}
-  .name{font-size:14px; color:#ddd}
-  .score{
-    font-size:40px;
+  .label{color:var(--muted); font-weight:800; margin-bottom:2px}
+  .name{font-size:14px}
+  .score{font-size:42px; line-height:1; font-variant-numeric: tabular-nums}
+  .race{text-align:center}
+  .race .to{font-size:14px; color:var(--muted)}
+  .race .target{font-size:38px}
+  .race .edit-race{margin-top:6px; display:flex; justify-content:center}
+
+  /* Timer */
+  .timer{
+    text-align:center;
+    font-size: clamp(110px, 22vw, 210px);
     line-height:1;
+    margin:6px 0 0;
+    font-weight:900;
     font-variant-numeric: tabular-nums;
   }
-  .race{
-    text-align:center;
-  }
-  .race .to{font-size:14px; color:#ddd}
-  .race .target{font-size:36px}
-  .edit-row{
-    display:flex; justify-content:center; gap:8px; margin-top:6px;
-  }
 
-  /* Main area */
+  /* Main two columns + divider */
   .main{
     display:grid;
     grid-template-columns: 1fr 2px 1fr;
-    gap:16px;
-    padding:10px 12px 22px;
+    gap:14px;
+    padding:12px 12px 22px;
   }
-
-  /* Thin divider */
   .divider{
-    width:2px;               /* smaller like you asked */
+    width:2px;  /* thinner divider */
     background: linear-gradient(180deg, transparent, var(--divider), transparent);
     border-radius:1px;
   }
 
-  /* Timer */
-  .timer{
-    grid-column: 1 / -1;
-    text-align:center;
-    font-weight:900;
-    font-variant-numeric: tabular-nums;
-    font-size: clamp(96px, 22vw, 200px);
-    line-height:1;
-    margin:8px 0 6px;
-    user-select:none;
-  }
+  .side{display:flex; flex-direction:column; align-items:center; gap:16px}
 
-  /* Panels under each side */
-  .side{
-    display:flex; flex-direction:column; gap:12px;
+  /* Image buttons: use <img> to avoid invisible background-image issues */
+  .imgbtn, .imgbtn-small{
+    display:inline-block;
+    border:0; background:none; padding:0; margin:0; cursor:pointer;
+    width: min(86%, 320px);
   }
-  .status{
-    padding:12px 10px;
-    text-align:center;
-    border-radius:14px;
-    background: linear-gradient(180deg, #3a3d4b, #2b2e3a);
-    box-shadow: inset 0 1px 0 rgba(255,255,255,.12), inset 0 -2px 8px rgba(0,0,0,.35);
-    font-weight:800; letter-spacing:.06em;
+  .imgbtn img, .imgbtn-small img{
+    display:block; width:100%; height:auto; border-radius:14px;
+    box-shadow: 0 8px 16px rgba(0,0,0,.35);
+    transition: transform .05s ease, filter .1s ease;
   }
+  .imgbtn:active img, .imgbtn-small:active img{ transform: translateY(1px); filter:brightness(.96) }
 
-  /* Buttons */
-  .btn{
-    appearance:none; border:0; cursor:pointer;
-    width:100%;
-    padding:16px 14px;
-    border-radius:16px;
-    color:#fff; font-weight:900; letter-spacing:.04em; text-transform:uppercase;
-    background:
-      radial-gradient(120% 140% at 20% -10%, rgba(255,255,255,.18), transparent 50%),
-      linear-gradient(180deg, var(--btn-hi), var(--btn));
-    box-shadow: 0 10px 16px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.12);
-    transition: transform .04s ease, filter .12s ease, box-shadow .12s ease;
-  }
-  .btn:active{ transform: translateY(1px); filter:brightness(.95) }
-  .btn.primary{
-    background:
-      radial-gradient(120% 140% at 20% -10%, rgba(255,255,255,.2), transparent 50%),
-      linear-gradient(180deg, #a34a7a, #7e3a62);
-  }
-  .btn.alt{
-    background:
-      radial-gradient(120% 140% at 20% -10%, rgba(255,255,255,.2), transparent 50%),
-      linear-gradient(180deg, #4775a6, #345278);
-  }
-  .btn.good{
-    background:
-      radial-gradient(120% 140% at 20% -10%, rgba(255,255,255,.2), transparent 50%),
-      linear-gradient(180deg, #4fb97d, #2a7f52);
-  }
+  .row{display:flex; gap:14px; justify-content:center; width:100%}
+  .row.center{margin-top:4px}
 
-  .row{display:flex; gap:12px}
-  .hidden{display:none !important}
+  /* smaller buttons row (clock controls + reset score/race/name) */
+  .imgbtn-small{ width:min(44vw, 210px) }
+  .center-stack{ display:flex; flex-direction:column; align-items:center; gap:12px }
 
-  /* Make tap targets comfy on phones */
-  @media (hover:none){
-    .btn{padding:18px 16px; border-radius:18px}
-  }
-
-  /* Avoid accidental iOS rubber-band white gaps near edges */
+  /* Safe-area padding on iOS */
   @supports (padding: env(safe-area-inset-bottom)){
-    body{padding-bottom: calc(env(safe-area-inset-bottom));}
+    body{padding-bottom: env(safe-area-inset-bottom)}
   }
 </style>
 </head>
 <body>
 
+  <!-- TOP -->
   <div class="top">
     <div class="left">
-      <small>Player1</small>
+      <div class="label">Player1</div>
       <div class="name" id="p1Name">PLAYER1</div>
       <div class="score" id="p1Score">0</div>
     </div>
@@ -150,139 +107,213 @@
     <div class="race">
       <div class="to">Race To</div>
       <div class="target" id="raceTo">8</div>
-      <div class="edit-row">
-        <button class="btn alt" id="editRaceBtn" style="width:auto; padding:10px 12px; border-radius:10px; font-size:12px;">Edit Race</button>
+      <div class="edit-race">
+        <button class="imgbtn-small" id="editRaceBtn" aria-label="Edit Race">
+          <img id="imgEditRace" alt="Edit Race">
+        </button>
       </div>
     </div>
 
     <div class="right" style="text-align:right">
-      <small>Player2</small>
+      <div class="label">Player2</div>
       <div class="name" id="p2Name">PLAYER2</div>
       <div class="score" id="p2Score">0</div>
     </div>
   </div>
 
+  <!-- TIMER -->
   <div class="timer" id="timer">30</div>
 
+  <!-- MAIN -->
   <div class="main">
-    <div class="side" id="leftSide">
-      <div class="status" id="p1Status">WAITING</div>
-      <button class="btn good" id="p1Plus">+1 POINT</button>
-      <button class="btn primary" id="p1Ext">Extension</button>
-      <div class="row">
-        <button class="btn" id="editP1">Edit Name</button>
-      </div>
+    <!-- LEFT SIDE -->
+    <div class="side">
+      <button class="imgbtn" id="p1StatusBtn" aria-label="Left status">
+        <img id="imgP1Status" alt="STATUS">
+      </button>
+      <button class="imgbtn" id="p1Plus" aria-label="Left +1 point">
+        <img id="imgP1Plus" alt="+1 POINT">
+      </button>
+      <button class="imgbtn" id="p1Ext" aria-label="Left extension">
+        <img id="imgP1Ext" alt="EXTENSION">
+      </button>
     </div>
 
-    <div class="divider"></div>
+    <div class="divider" aria-hidden="true"></div>
 
-    <div class="side" id="rightSide">
-      <div class="status" id="p2Status">WAITING</div>
-      <button class="btn good" id="p2Plus">+1 POINT</button>
-      <button class="btn primary" id="p2Ext">Extension</button>
-      <div class="row">
-        <button class="btn" id="editP2">Edit Name</button>
-      </div>
+    <!-- RIGHT SIDE -->
+    <div class="side">
+      <button class="imgbtn" id="p2StatusBtn" aria-label="Right status">
+        <img id="imgP2Status" alt="STATUS">
+      </button>
+      <button class="imgbtn" id="p2Plus" aria-label="Right +1 point">
+        <img id="imgP2Plus" alt="+1 POINT">
+      </button>
+      <button class="imgbtn" id="p2Ext" aria-label="Right extension">
+        <img id="imgP2Ext" alt="EXTENSION">
+      </button>
     </div>
   </div>
 
+  <!-- LOWER CONTROLS -->
+  <div class="row center">
+    <button class="imgbtn-small" id="pauseBtn" aria-label="Clock Paused">
+      <img id="imgPause" alt="Clock Paused">
+    </button>
+    <button class="imgbtn-small" id="startBtn" aria-label="Clock Running">
+      <img id="imgStart" alt="Clock Running">
+    </button>
+    <button class="imgbtn-small" id="resetClockBtn" aria-label="Reset Clock">
+      <img id="imgResetClock" alt="Reset Clock">
+    </button>
+  </div>
+
+  <div class="center-stack" style="margin-top:10px">
+    <!-- This is the one you asked for specifically -->
+    <button class="imgbtn-small" id="resetScoreBtn" aria-label="Reset Score">
+      <img id="imgResetScore" alt="Reset Score" src="assets/reset-score-button.png">
+    </button>
+  </div>
+
+  <div class="row center" style="margin-top:4px">
+    <button class="imgbtn-small" id="editP1" aria-label="Edit Player 1 Name">
+      <img id="imgEditNameL" alt="Edit Name (Left)">
+    </button>
+    <button class="imgbtn-small" id="editP2" aria-label="Edit Player 2 Name">
+      <img id="imgEditNameR" alt="Edit Name (Right)">
+    </button>
+  </div>
+
 <script>
-(() => {
-  const el = id => document.getElementById(id);
+/* ---------- Image file names (edit to match your assets) ---------- */
+/* Only reset-score-button.png is fixed per your instruction */
+const IMG = {
+  p1Status_waiting: 'assets/status-waiting-left.png',
+  p1Status_playing: 'assets/status-playing-left.png',
 
-  // State
-  let p1 = { name:'PLAYER1', score:0, usedExt:false };
-  let p2 = { name:'PLAYER2', score:0, usedExt:false };
-  let raceTo = 8;
+  p2Status_waiting: 'assets/status-waiting-right.png',
+  p2Status_playing: 'assets/status-playing-right.png',
 
-  // Timer
-  let sec = 30, t = null;
-  const timerEl = el('timer');
+  p1Plus: 'assets/plus1-left.png',   // left +1 (gray)
+  p2Plus: 'assets/plus1-right.png',  // right +1 (blue)
 
-  function draw(){
-    el('p1Name').textContent = p1.name;
-    el('p2Name').textContent = p2.name;
-    el('p1Score').textContent = p1.score;
-    el('p2Score').textContent = p2.score;
-    el('raceTo').textContent = raceTo;
-    timerEl.textContent = sec.toString();
-    el('p1Ext').disabled = p1.usedExt;
-    el('p2Ext').disabled = p2.usedExt;
-    el('p1Ext').style.filter = p1.usedExt ? 'grayscale(0.7)' : '';
-    el('p2Ext').style.filter = p2.usedExt ? 'grayscale(0.7)' : '';
+  p1Ext_ready:  'assets/extension-left.png',
+  p1Ext_used:   'assets/extension-called-left.png',
+  p2Ext_ready:  'assets/extension-right.png',
+  p2Ext_used:   'assets/extension-called-right.png',
+
+  start:        'assets/clock-running.png',
+  pause:        'assets/clock-paused.png',
+  resetClock:   'assets/reset-clock.png',
+
+  editName:     'assets/edit-name-button.png',
+  editRace:     'assets/edit-race-button.png'
+};
+
+/* Preload helper so images show instantly */
+function setImg(id, src, fallbackText){
+  const img = document.getElementById(id);
+  img.src = src;
+  img.onerror = () => { img.alt = fallbackText || id; };
+}
+
+/* ---------- State ---------- */
+let p1 = { name:'PLAYER1', score:0, usedExt:false, playing:true };
+let p2 = { name:'PLAYER2', score:0, usedExt:false, playing:false };
+let raceTo = 8;
+
+let sec = 30, timer=null;
+
+const $ = sel => document.getElementById(sel);
+
+function paint(){
+  $('p1Name').textContent = p1.name;
+  $('p2Name').textContent = p2.name;
+  $('p1Score').textContent = p1.score;
+  $('p2Score').textContent = p2.score;
+  $('raceTo').textContent = raceTo;
+  $('timer').textContent = sec;
+
+  setImg('imgP1Status', p1.playing ? IMG.p1Status_playing : IMG.p1Status_waiting, 'STATUS');
+  setImg('imgP2Status', p2.playing ? IMG.p2Status_playing : IMG.p2Status_waiting, 'STATUS');
+
+  setImg('imgP1Plus', IMG.p1Plus, '+1 POINT');
+  setImg('imgP2Plus', IMG.p2Plus, '+1 POINT');
+
+  setImg('imgP1Ext', p1.usedExt ? IMG.p1Ext_used : IMG.p1Ext_ready, 'EXTENSION');
+  setImg('imgP2Ext', p2.usedExt ? IMG.p2Ext_used : IMG.p2Ext_ready, 'EXTENSION');
+
+  setImg('imgStart', IMG.start, 'CLOCK RUNNING');
+  setImg('imgPause', IMG.pause, 'CLOCK PAUSED');
+  setImg('imgResetClock', IMG.resetClock, 'RESET CLOCK');
+
+  setImg('imgEditRace', IMG.editRace, 'EDIT RACE');
+  setImg('imgEditNameL', IMG.editName, 'EDIT NAME');
+  setImg('imgEditNameR', IMG.editName, 'EDIT NAME');
+}
+
+function tick(){
+  sec = Math.max(0, sec-1);
+  $('timer').textContent = sec;
+  if(sec===0){ stop(); }
+}
+function start(){ if(timer) return; timer = setInterval(tick, 1000); }
+function stop(){ if(timer){ clearInterval(timer); timer=null; } }
+function resetClock(){ sec = 30; $('timer').textContent = sec; }
+
+/* ---------- Events ---------- */
+$('p1Plus').addEventListener('click', () => {
+  p1.score++; resetClock(); start(); p1.usedExt=false; p2.usedExt=false; p1.playing=false; p2.playing=true; paint(); checkWin();
+});
+$('p2Plus').addEventListener('click', () => {
+  p2.score++; resetClock(); start(); p1.usedExt=false; p2.usedExt=false; p1.playing=true; p2.playing=false; paint(); checkWin();
+});
+
+$('p1Ext').addEventListener('click', () => {
+  if(!p1.usedExt){ p1.usedExt=true; resetClock(); start(); paint(); }
+});
+$('p2Ext').addEventListener('click', () => {
+  if(!p2.usedExt){ p2.usedExt=true; resetClock(); start(); paint(); }
+});
+
+$('startBtn').addEventListener('click', start);
+$('pauseBtn').addEventListener('click', stop);
+$('resetClockBtn').addEventListener('click', () => { resetClock(); paint(); });
+
+$('resetScoreBtn').addEventListener('click', () => {
+  if(confirm('Reset both scores?')){
+    p1.score=0; p2.score=0; p1.usedExt=false; p2.usedExt=false; paint();
   }
+});
 
-  function tick(){
-    sec = Math.max(0, sec-1);
-    draw();
-    if(sec===0){ stop(); }
+$('editRaceBtn').addEventListener('click', () => {
+  const v = prompt('Race to:', raceTo);
+  const n = Number(v);
+  if(Number.isInteger(n) && n>0 && n<100){ raceTo = n; paint(); }
+});
+
+$('editP1').addEventListener('click', () => {
+  const v = prompt('Player 1 name:', p1.name);
+  if(v && v.trim()) p1.name = v.trim().toUpperCase();
+  paint();
+});
+$('editP2').addEventListener('click', () => {
+  const v = prompt('Player 2 name:', p2.name);
+  if(v && v.trim()) p2.name = v.trim().toUpperCase();
+  paint();
+});
+
+/* Winner */
+function checkWin(){
+  if(p1.score>=raceTo || p2.score>=raceTo){
+    stop();
+    const winner = p1.score>p2.score ? p1.name : p2.name;
+    alert(`${winner} wins the race to ${raceTo}!`);
   }
-  function start(){
-    if(t) return;
-    t = setInterval(tick, 1000);
-  }
-  function stop(){
-    if(t){ clearInterval(t); t=null; }
-  }
-  function resetShotClock(){
-    sec = 30;
-    draw();
-  }
+}
 
-  // Basic interactions
-  el('p1Plus').addEventListener('click', () => {
-    p1.score++; p1.usedExt=false; p2.usedExt=false; resetShotClock(); draw(); start();
-    checkWinner();
-  });
-  el('p2Plus').addEventListener('click', () => {
-    p2.score++; p1.usedExt=false; p2.usedExt=false; resetShotClock(); draw(); start();
-    checkWinner();
-  });
-
-  el('p1Ext').addEventListener('click', () => {
-    if(!p1.usedExt){ p1.usedExt=true; resetShotClock(); start(); }
-  });
-  el('p2Ext').addEventListener('click', () => {
-    if(!p2.usedExt){ p2.usedExt=true; resetShotClock(); start(); }
-  });
-
-  // Edit name buttons (only top names are changed)
-  el('editP1').addEventListener('click', () => {
-    const n = prompt('Player 1 name:', p1.name);
-    if(n && n.trim()) p1.name = n.trim().toUpperCase();
-    draw();
-  });
-  el('editP2').addEventListener('click', () => {
-    const n = prompt('Player 2 name:', p2.name);
-    if(n && n.trim()) p2.name = n.trim().toUpperCase();
-    draw();
-  });
-
-  // Edit race button
-  el('editRaceBtn').addEventListener('click', () => {
-    const v = prompt('Race to (target points):', raceTo);
-    const n = Number(v);
-    if(Number.isInteger(n) && n>0 && n<100) raceTo = n;
-    draw();
-  });
-
-  // Winner check
-  function checkWinner(){
-    if(p1.score>=raceTo || p2.score>=raceTo){
-      stop();
-      const winner = p1.score>p2.score ? p1.name : p2.name;
-      alert(`${winner} wins the race to ${raceTo}!`);
-    }
-  }
-
-  // Start the clock on first interaction
-  ['p1Plus','p2Plus','p1Ext','p2Ext'].forEach(id=>{
-    el(id).addEventListener('click', () => { if(!t) start(); });
-  });
-
-  // Initial paint
-  draw();
-})();
+/* First render */
+paint();
 </script>
 </body>
 </html>
