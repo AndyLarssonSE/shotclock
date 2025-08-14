@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Pool & Billiard Timer</title>
+<title>AndyLarsson.se - Pool & Billiard Timer</title>
 <style>
   :root{
-    --bg-top:#282727;   /* requested gradient */
+    --bg-top:#282727;
     --bg-bot:#161616;
     --text:#ffffff;
     --muted:#cfd3d8;
@@ -61,14 +61,14 @@
     padding:12px 12px 22px;
   }
   .divider{
-    width:2px;  /* thinner divider */
+    width:2px;
     background: linear-gradient(180deg, transparent, var(--divider), transparent);
     border-radius:1px;
   }
 
   .side{display:flex; flex-direction:column; align-items:center; gap:16px}
 
-  /* Image buttons: use <img> to avoid invisible background-image issues */
+  /* Image buttons */
   .imgbtn, .imgbtn-small{
     display:inline-block;
     border:0; background:none; padding:0; margin:0; cursor:pointer;
@@ -167,7 +167,6 @@
   </div>
 
   <div class="center-stack" style="margin-top:10px">
-    <!-- This is the one you asked for specifically -->
     <button class="imgbtn-small" id="resetScoreBtn" aria-label="Reset Score">
       <img id="imgResetScore" alt="Reset Score" src="assets/reset-score-button.png">
     </button>
@@ -183,8 +182,7 @@
   </div>
 
 <script>
-/* ---------- Image file names (edit to match your assets) ---------- */
-/* Only reset-score-button.png is fixed per your instruction */
+/* ---------- Image file names (match your actual /assets/ files) ---------- */
 const IMG = {
   p1Status_waiting: 'assets/status-waiting-left.png',
   p1Status_playing: 'assets/status-playing-left.png',
@@ -192,17 +190,19 @@ const IMG = {
   p2Status_waiting: 'assets/status-waiting-right.png',
   p2Status_playing: 'assets/status-playing-right.png',
 
-  p1Plus: 'assets/plus1-left.png',   // left +1 (gray)
-  p2Plus: 'assets/plus1-right.png',  // right +1 (blue)
+  p1Plus: 'assets/plus1-left.png',
+  p2Plus: 'assets/plus1-right.png',
 
   p1Ext_ready:  'assets/extension-left.png',
   p1Ext_used:   'assets/extension-called-left.png',
   p2Ext_ready:  'assets/extension-right.png',
   p2Ext_used:   'assets/extension-called-right.png',
 
-  start:        'assets/clock-running.png',
-  pause:        'assets/clock-paused.png',
-  resetClock:   'assets/reset-clock.png',
+  /* fixed & consistent control names */
+  start:        'assets/start-clock-button.png',
+  running:      'assets/clock-running-button.png',
+  pause:        'assets/pause-clock-button.png',
+  resetClock:   'assets/reset-clock-button.png',
 
   editName:     'assets/edit-name-button.png',
   editRace:     'assets/edit-race-button.png'
@@ -241,7 +241,8 @@ function paint(){
   setImg('imgP1Ext', p1.usedExt ? IMG.p1Ext_used : IMG.p1Ext_ready, 'EXTENSION');
   setImg('imgP2Ext', p2.usedExt ? IMG.p2Ext_used : IMG.p2Ext_ready, 'EXTENSION');
 
-  setImg('imgStart', IMG.start, 'CLOCK RUNNING');
+  // If timer is running, show "running" on the Start button; otherwise "start"
+  setImg('imgStart', timer ? IMG.running : IMG.start, timer ? 'CLOCK RUNNING' : 'START CLOCK');
   setImg('imgPause', IMG.pause, 'CLOCK PAUSED');
   setImg('imgResetClock', IMG.resetClock, 'RESET CLOCK');
 
@@ -250,40 +251,90 @@ function paint(){
   setImg('imgEditNameR', IMG.editName, 'EDIT NAME');
 }
 
+/* timer logic */
 function tick(){
   sec = Math.max(0, sec-1);
   $('timer').textContent = sec;
   if(sec===0){ stop(); }
 }
-function start(){ if(timer) return; timer = setInterval(tick, 1000); }
-function stop(){ if(timer){ clearInterval(timer); timer=null; } }
-function resetClock(){ sec = 30; $('timer').textContent = sec; }
+function start(){
+  if(timer) return;
+  timer = setInterval(tick, 1000);
+  alert('CLOCK STARTED');
+  paint(); // flip Start button graphic to "running"
+}
+function stop(){
+  if(timer){ clearInterval(timer); timer=null; }
+  paint(); // flip Start button graphic back to "Start"
+}
+function resetClock(){
+  sec = 30;
+  $('timer').textContent = sec;
+  stop();   // ensures Start shows "Start Clock" after reset
+}
 
 /* ---------- Events ---------- */
+/* SCORE: +1 should NOT start clock or change who is playing */
 $('p1Plus').addEventListener('click', () => {
-  p1.score++; resetClock(); start(); p1.usedExt=false; p2.usedExt=false; p1.playing=false; p2.playing=true; paint(); checkWin();
+  p1.score++;
+  // allow new extensions in the new frame (optional behavior)
+  p1.usedExt=false; p2.usedExt=false;
+  paint();
+  checkWin();
 });
 $('p2Plus').addEventListener('click', () => {
-  p2.score++; resetClock(); start(); p1.usedExt=false; p2.usedExt=false; p1.playing=true; p2.playing=false; paint(); checkWin();
+  p2.score++;
+  p1.usedExt=false; p2.usedExt=false;
+  paint();
+  checkWin();
 });
 
+/* EXTENSION: only for active player, once until a point, and only if time > 0 */
 $('p1Ext').addEventListener('click', () => {
-  if(!p1.usedExt){ p1.usedExt=true; resetClock(); start(); paint(); }
+  if(p1.playing && !p1.usedExt && sec>0){
+    p1.usedExt=true; sec = 30; $('timer').textContent = sec; start();
+    paint();
+  }
 });
 $('p2Ext').addEventListener('click', () => {
-  if(!p2.usedExt){ p2.usedExt=true; resetClock(); start(); paint(); }
-});
-
-$('startBtn').addEventListener('click', start);
-$('pauseBtn').addEventListener('click', stop);
-$('resetClockBtn').addEventListener('click', () => { resetClock(); paint(); });
-
-$('resetScoreBtn').addEventListener('click', () => {
-  if(confirm('Reset both scores?')){
-    p1.score=0; p2.score=0; p1.usedExt=false; p2.usedExt=false; paint();
+  if(p2.playing && !p2.usedExt && sec>0){
+    p2.usedExt=true; sec = 30; $('timer').textContent = sec; start();
+    paint();
   }
 });
 
+/* STATUS: clicking the "waiting" switches to "playing" (and other side to waiting) */
+$('p1StatusBtn').addEventListener('click', () => {
+  if(!p1.playing){ p1.playing = true; p2.playing = false; }
+  paint();
+});
+$('p2StatusBtn').addEventListener('click', () => {
+  if(!p2.playing){ p2.playing = true; p1.playing = false; }
+  paint();
+});
+
+/* CLOCK CONTROLS */
+$('startBtn').addEventListener('click', start);
+
+$('pauseBtn').addEventListener('click', () => {
+  stop();
+  alert('GAME PAUSED');
+});
+
+$('resetClockBtn').addEventListener('click', () => {
+  resetClock(); // also flips Start image back to "Start"
+  paint();
+});
+
+/* RESET SCORES */
+$('resetScoreBtn').addEventListener('click', () => {
+  if(confirm('Reset both scores?')){
+    p1.score=0; p2.score=0; p1.usedExt=false; p2.usedExt=false;
+    paint();
+  }
+});
+
+/* EDITS */
 $('editRaceBtn').addEventListener('click', () => {
   const v = prompt('Race to:', raceTo);
   const n = Number(v);
