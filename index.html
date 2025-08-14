@@ -72,7 +72,7 @@
   .imgbtn, .imgbtn-small{
     display:inline-block;
     border:0; background:none; padding:0; margin:0; cursor:pointer;
-    width: min(86%, 320px);
+    width: min(50%, 320px);
   }
   .imgbtn img, .imgbtn-small img{
     display:block; width:100%; height:auto; border-radius:14px;
@@ -85,7 +85,7 @@
   .row.center{margin-top:4px}
 
   /* smaller buttons row (clock controls + reset score/race/name) */
-  .imgbtn-small{ width:min(44vw, 210px) }
+  .imgbtn-small{ width:min(44vw, 110px) }
   .center-stack{ display:flex; flex-direction:column; align-items:center; gap:12px }
 
   /* Safe-area padding on iOS */
@@ -200,9 +200,9 @@ const IMG = {
 
   /* fixed & consistent control names */
   start:        'assets/start-clock-button.png',
-  running:      'assets/clock-running-button.png',
+  running:      'assets/clock-running.png',
   pause:        'assets/pause-clock-button.png',
-  resetClock:   'assets/reset-clock-button.png',
+  resetClock:   'assets/reset-clock.png',
 
   editName:     'assets/edit-name-button.png',
   editRace:     'assets/edit-race-button.png'
