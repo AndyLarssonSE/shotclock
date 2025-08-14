@@ -1,140 +1,76 @@
 :root{
-  --bg:#0d0d0f;
-  --text:#eaeaea;
-  --muted:#bdbdbd;
-  --accent:#b58fff;    /* subtle purple vibe */
-  --green:#49a36a;
-  --danger:#ff5252;
-  --shadow:0 6px 24px rgba(0,0,0,.25);
+  --bg:#0b0b0d;
+  --text:#f1f1f1;
+  --danger:#ff4d4d;
+  --shadow:0 10px 30px rgba(0,0,0,.35);
 }
 
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%}
 body{
   margin:0;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, Noto Sans, "Apple Color Emoji","Segoe UI Emoji";
-  background: radial-gradient(1200px 600px at 50% -20%, #1a1a1f 10%, #0b0b0d 70%), var(--bg);
+  font-family: system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;
+  background: radial-gradient(1200px 600px at 50% -15%, #16161c 10%, #0b0b0d 70%), var(--bg);
   color:var(--text);
 }
 
-.wrap{max-width:520px;margin:0 auto;padding:16px 12px 40px;}
+.wrap{max-width:520px;margin:0 auto;padding:14px 12px 42px;}
 
 .topbar{
   display:grid;
   grid-template-columns:1fr 1fr 1fr;
   align-items:end;
   gap:8px;
-  margin-top:8px;
 }
-.pill{
-  text-align:center;
-}
-.pill .label{
-  display:block;
-  font-weight:900;
-  letter-spacing:1px;
-  font-size:20px;
-}
-.pill .score{
-  display:block;
-  font-weight:900;
-  font-size:36px;
-  margin-top:8px;
-}
+.pill{ text-align:center; }
+.pill .label{ display:block; font-weight:900; letter-spacing:1px; font-size:20px; }
+.pill .score{ display:block; font-weight:900; font-size:36px; margin-top:6px; }
 
 .timer{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  height:180px;
-  position:relative;
+  display:flex; align-items:center; justify-content:center;
+  height:180px; position:relative;
 }
 .bigtime{
-  font-weight:900;
-  font-size:160px;
-  line-height:1;
-  text-shadow: 0 10px 40px rgba(0,0,0,.35);
+  font-weight:900; font-size:160px; line-height:1;
+  text-shadow:0 10px 40px rgba(0,0,0,.35);
   transition: color .2s ease;
 }
-.bigtime.red{ color: var(--danger); }
+.bigtime.red{ color:var(--danger); }
 
 .toast{
-  position:absolute;
-  bottom:8px;
+  position:absolute; bottom:8px; left:50%; transform:translateX(-50%);
   background: rgba(255,255,255,.08);
   border:1px solid rgba(255,255,255,.15);
-  padding:8px 12px;
-  border-radius:12px;
-  font-weight:700;
-  letter-spacing:.3px;
-  display:none;
+  padding:8px 12px; border-radius:12px; font-weight:700; display:none;
 }
 .toast.show{ display:block; }
 
 .grid{
-  display:grid;
-  grid-template-columns:1fr 40px 1fr;
-  align-items:start;
-  gap:6px;
-  margin-top:8px;
+  display:grid; grid-template-columns:1fr 40px 1fr; gap:8px; align-items:start; margin-top:6px;
 }
 .col{ display:grid; gap:10px; }
-.divider{ display:flex; justify-content:center; align-items:center; }
-.divider img{ width:24px; opacity:.9; filter: drop-shadow(var(--shadow)); }
+.divider{ display:flex; align-items:center; justify-content:center; }
+.divider img{ width:22px; filter:drop-shadow(var(--shadow)); }
 
-.imgbtn{
-  background: transparent;
-  border:0;
-  padding:0;
-  display:block;
-  width:100%;
-}
-.imgbtn img{
-  width:100%;
-  display:block;
-  border-radius:14px;
-  box-shadow: var(--shadow);
-}
+.imgbtn{ background:transparent; border:0; padding:0; width:100%; }
+.imgbtn img{ width:100%; display:block; border-radius:14px; box-shadow:var(--shadow); }
 .imgbtn.small img{ width:70%; margin:0 auto; }
 .imgbtn.mid img{ width:86%; margin:0 auto; }
 
-.controls{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr;
-  gap:10px;
-  margin:18px 0 6px;
-}
+.controls{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin:18px 0 8px; }
+.bottom{ display:flex; justify-content:space-between; align-items:center; margin:10px 0 6px; }
 
-.bottom{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  margin:8px 0 10px;
-}
 .textbtn{
   border:1px solid rgba(255,255,255,.25);
-  background: rgba(255,255,255,.06);
-  color:var(--text);
-  font-weight:800;
-  letter-spacing:.5px;
-  border-radius:12px;
-  padding:12px 14px;
-  box-shadow: var(--shadow);
+  background:rgba(255,255,255,.06);
+  color:var(--text); font-weight:800; letter-spacing:.5px;
+  border-radius:12px; padding:12px 14px; box-shadow:var(--shadow);
 }
 
-.names{
-  display:grid;
-  grid-template-columns:1fr 40px 1fr;
-  text-align:center;
-  margin-top:6px;
-}
-.playername{
-  font-weight:900;
-  font-size:22px;
-  letter-spacing:1px;
-}
+.names{ display:grid; grid-template-columns:1fr 40px 1fr; text-align:center; margin-top:6px; }
+.playername{ font-weight:900; font-size:22px; letter-spacing:1px; }
 
-/* iPhone safe area love */
+/* Safe area */
 @supports(padding:max(0px)){
-  .wrap{ padding-bottom: max(40px, env(safe-area-inset-bottom)); }
+  .wrap{ padding-bottom:max(42px, env(safe-area-inset-bottom)); }
 }
