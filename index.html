@@ -1,103 +1,288 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-  <title>AndyLarsson.se - Pool & Billiard Timer</title>
-  <link rel="stylesheet" href="style.css" />
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>AndyLarsson.se – Pool & Billiard Timer</title>
+<style>
+  :root{
+    --bg:#0b0b0f;
+    --panel:#14151c;
+    --text:#f7f7f7;
+    --muted:#bfc5d1;
+    --accent:#ff6e8a;
+    --accent2:#8ec5ff;
+    --btn:#2a2c36;
+    --btn-hi:#3a3d4b;
+    --success:#78ffa1;
+    --danger:#ff7b7b;
+    --divider:#e3f2f1;
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+    background: radial-gradient(1200px 800px at 50% -10%, #1b1e27, var(--bg));
+    color:var(--text);
+  }
+
+  /* Top bar (names + scores + race) */
+  .top{
+    display:grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items:end;
+    gap:12px;
+    padding:16px 14px 8px;
+    text-transform:uppercase;
+    font-weight:800;
+    letter-spacing:.06em;
+  }
+  .top small{display:block; color:var(--muted); font-weight:700; margin-bottom:4px}
+  .name{font-size:14px; color:#ddd}
+  .score{
+    font-size:40px;
+    line-height:1;
+    font-variant-numeric: tabular-nums;
+  }
+  .race{
+    text-align:center;
+  }
+  .race .to{font-size:14px; color:#ddd}
+  .race .target{font-size:36px}
+  .edit-row{
+    display:flex; justify-content:center; gap:8px; margin-top:6px;
+  }
+
+  /* Main area */
+  .main{
+    display:grid;
+    grid-template-columns: 1fr 2px 1fr;
+    gap:16px;
+    padding:10px 12px 22px;
+  }
+
+  /* Thin divider */
+  .divider{
+    width:2px;               /* smaller like you asked */
+    background: linear-gradient(180deg, transparent, var(--divider), transparent);
+    border-radius:1px;
+  }
+
+  /* Timer */
+  .timer{
+    grid-column: 1 / -1;
+    text-align:center;
+    font-weight:900;
+    font-variant-numeric: tabular-nums;
+    font-size: clamp(96px, 22vw, 200px);
+    line-height:1;
+    margin:8px 0 6px;
+    user-select:none;
+  }
+
+  /* Panels under each side */
+  .side{
+    display:flex; flex-direction:column; gap:12px;
+  }
+  .status{
+    padding:12px 10px;
+    text-align:center;
+    border-radius:14px;
+    background: linear-gradient(180deg, #3a3d4b, #2b2e3a);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.12), inset 0 -2px 8px rgba(0,0,0,.35);
+    font-weight:800; letter-spacing:.06em;
+  }
+
+  /* Buttons */
+  .btn{
+    appearance:none; border:0; cursor:pointer;
+    width:100%;
+    padding:16px 14px;
+    border-radius:16px;
+    color:#fff; font-weight:900; letter-spacing:.04em; text-transform:uppercase;
+    background:
+      radial-gradient(120% 140% at 20% -10%, rgba(255,255,255,.18), transparent 50%),
+      linear-gradient(180deg, var(--btn-hi), var(--btn));
+    box-shadow: 0 10px 16px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.12);
+    transition: transform .04s ease, filter .12s ease, box-shadow .12s ease;
+  }
+  .btn:active{ transform: translateY(1px); filter:brightness(.95) }
+  .btn.primary{
+    background:
+      radial-gradient(120% 140% at 20% -10%, rgba(255,255,255,.2), transparent 50%),
+      linear-gradient(180deg, #a34a7a, #7e3a62);
+  }
+  .btn.alt{
+    background:
+      radial-gradient(120% 140% at 20% -10%, rgba(255,255,255,.2), transparent 50%),
+      linear-gradient(180deg, #4775a6, #345278);
+  }
+  .btn.good{
+    background:
+      radial-gradient(120% 140% at 20% -10%, rgba(255,255,255,.2), transparent 50%),
+      linear-gradient(180deg, #4fb97d, #2a7f52);
+  }
+
+  .row{display:flex; gap:12px}
+  .hidden{display:none !important}
+
+  /* Make tap targets comfy on phones */
+  @media (hover:none){
+    .btn{padding:18px 16px; border-radius:18px}
+  }
+
+  /* Avoid accidental iOS rubber-band white gaps near edges */
+  @supports (padding: env(safe-area-inset-bottom)){
+    body{padding-bottom: calc(env(safe-area-inset-bottom));}
+  }
+</style>
 </head>
 <body>
-  <main class="wrap">
-    <!-- Header: names/scores/race-to -->
-    <header class="topbar">
-      <div class="pill">
-        <span class="label">PLAYER1</span>
-        <span id="p1Score" class="score">0</span>
+
+  <div class="top">
+    <div class="left">
+      <small>Player1</small>
+      <div class="name" id="p1Name">PLAYER1</div>
+      <div class="score" id="p1Score">0</div>
+    </div>
+
+    <div class="race">
+      <div class="to">Race To</div>
+      <div class="target" id="raceTo">8</div>
+      <div class="edit-row">
+        <button class="btn alt" id="editRaceBtn" style="width:auto; padding:10px 12px; border-radius:10px; font-size:12px;">Edit Race</button>
       </div>
-      <div class="pill center">
-        <span class="label">RACE TO</span>
-        <span id="raceTo" class="score">8</span>
+    </div>
+
+    <div class="right" style="text-align:right">
+      <small>Player2</small>
+      <div class="name" id="p2Name">PLAYER2</div>
+      <div class="score" id="p2Score">0</div>
+    </div>
+  </div>
+
+  <div class="timer" id="timer">30</div>
+
+  <div class="main">
+    <div class="side" id="leftSide">
+      <div class="status" id="p1Status">WAITING</div>
+      <button class="btn good" id="p1Plus">+1 POINT</button>
+      <button class="btn primary" id="p1Ext">Extension</button>
+      <div class="row">
+        <button class="btn" id="editP1">Edit Name</button>
       </div>
-      <div class="pill">
-        <span class="label">PLAYER2</span>
-        <span id="p2Score" class="score">0</span>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="side" id="rightSide">
+      <div class="status" id="p2Status">WAITING</div>
+      <button class="btn good" id="p2Plus">+1 POINT</button>
+      <button class="btn primary" id="p2Ext">Extension</button>
+      <div class="row">
+        <button class="btn" id="editP2">Edit Name</button>
       </div>
-    </header>
+    </div>
+  </div>
 
-    <!-- Big clock -->
-    <section class="timer">
-      <div id="clock" class="bigtime">30</div>
-      <div id="toast" class="toast" aria-live="polite"></div>
-    </section>
+<script>
+(() => {
+  const el = id => document.getElementById(id);
 
-    <!-- Left / Divider / Right columns -->
-    <section class="grid">
-      <!-- LEFT -->
-      <div class="col left">
-        <button id="p1StateBtn" class="imgbtn" aria-label="P1 Playing/Waiting">
-          <img id="p1StateImg" src="/assets/waiting-button.png" alt="Waiting" />
-        </button>
-        <button id="p1PointBtn" class="imgbtn" aria-label="+1 Point P1">
-          <img id="p1PointImg" src="/assets/point-standard-button.png" alt="+1 Point" />
-        </button>
-        <button id="p1ExtBtn" class="imgbtn" aria-label="Extension P1">
-          <img id="p1ExtImg" src="/assets/extension-button.png" alt="Extension" />
-        </button>
-        <button id="p1EditNameBtn" class="imgbtn small" aria-label="Edit Player1 name">
-          <img src="/assets/edit-player1-name-button.png" alt="Edit name" />
-        </button>
-      </div>
+  // State
+  let p1 = { name:'PLAYER1', score:0, usedExt:false };
+  let p2 = { name:'PLAYER2', score:0, usedExt:false };
+  let raceTo = 8;
 
-      <!-- Divider -->
-      <div class="divider">
-        <img src="/assets/divider.png" alt="" />
-      </div>
+  // Timer
+  let sec = 30, t = null;
+  const timerEl = el('timer');
 
-      <!-- RIGHT -->
-      <div class="col right">
-        <button id="p2StateBtn" class="imgbtn" aria-label="P2 Playing/Waiting">
-          <img id="p2StateImg" src="/assets/waiting-button.png" alt="Waiting" />
-        </button>
-        <button id="p2PointBtn" class="imgbtn" aria-label="+1 Point P2">
-          <img id="p2PointImg" src="/assets/point-standard-button.png" alt="+1 Point" />
-        </button>
-        <button id="p2ExtBtn" class="imgbtn" aria-label="Extension P2">
-          <img id="p2ExtImg" src="/assets/extension-button.png" alt="Extension" />
-        </button>
-        <button id="p2EditNameBtn" class="imgbtn small" aria-label="Edit Player2 name">
-          <img src="/assets/edit-player2-name-button.png" alt="Edit name" />
-        </button>
-      </div>
-    </section>
+  function draw(){
+    el('p1Name').textContent = p1.name;
+    el('p2Name').textContent = p2.name;
+    el('p1Score').textContent = p1.score;
+    el('p2Score').textContent = p2.score;
+    el('raceTo').textContent = raceTo;
+    timerEl.textContent = sec.toString();
+    el('p1Ext').disabled = p1.usedExt;
+    el('p2Ext').disabled = p2.usedExt;
+    el('p1Ext').style.filter = p1.usedExt ? 'grayscale(0.7)' : '';
+    el('p2Ext').style.filter = p2.usedExt ? 'grayscale(0.7)' : '';
+  }
 
-    <!-- Clock controls -->
-    <section class="controls">
-      <button id="pauseBtn" class="imgbtn mid" aria-label="Pause">
-        <img id="pauseImg" src="/assets/pause-clock-button.png" alt="Pause" />
-      </button>
-      <button id="startBtn" class="imgbtn mid" aria-label="Start">
-        <img id="startImg" src="/assets/start-clock-button.png" alt="Start" />
-      </button>
-      <button id="resetClockBtn" class="imgbtn mid" aria-label="Reset clock">
-        <img id="resetClockImg" src="/assets/reset-clock-button.png" alt="Reset clock" />
-      </button>
-    </section>
+  function tick(){
+    sec = Math.max(0, sec-1);
+    draw();
+    if(sec===0){ stop(); }
+  }
+  function start(){
+    if(t) return;
+    t = setInterval(tick, 1000);
+  }
+  function stop(){
+    if(t){ clearInterval(t); t=null; }
+  }
+  function resetShotClock(){
+    sec = 30;
+    draw();
+  }
 
-    <!-- Bottom row -->
-    <section class="bottom">
-      <button id="editRaceBtn" class="imgbtn small" aria-label="Edit race to">
-        <img src="/assets/edit-race-button.png" alt="Edit race" />
-      </button>
-      <button id="resetScoreBtn" class="textbtn" aria-label="Reset both scores">RESET SCORE</button>
-    </section>
+  // Basic interactions
+  el('p1Plus').addEventListener('click', () => {
+    p1.score++; p1.usedExt=false; p2.usedExt=false; resetShotClock(); draw(); start();
+    checkWinner();
+  });
+  el('p2Plus').addEventListener('click', () => {
+    p2.score++; p1.usedExt=false; p2.usedExt=false; resetShotClock(); draw(); start();
+    checkWinner();
+  });
 
-    <!-- Names under columns (visual like your mock) -->
-    <footer class="names">
-      <div><span id="p1Name" class="playername">PLAYER1</span></div>
-      <div></div>
-      <div><span id="p2Name" class="playername">PLAYER2</span></div>
-    </footer>
-  </main>
-  <script src="app.js"></script>
+  el('p1Ext').addEventListener('click', () => {
+    if(!p1.usedExt){ p1.usedExt=true; resetShotClock(); start(); }
+  });
+  el('p2Ext').addEventListener('click', () => {
+    if(!p2.usedExt){ p2.usedExt=true; resetShotClock(); start(); }
+  });
+
+  // Edit name buttons (only top names are changed)
+  el('editP1').addEventListener('click', () => {
+    const n = prompt('Player 1 name:', p1.name);
+    if(n && n.trim()) p1.name = n.trim().toUpperCase();
+    draw();
+  });
+  el('editP2').addEventListener('click', () => {
+    const n = prompt('Player 2 name:', p2.name);
+    if(n && n.trim()) p2.name = n.trim().toUpperCase();
+    draw();
+  });
+
+  // Edit race button
+  el('editRaceBtn').addEventListener('click', () => {
+    const v = prompt('Race to (target points):', raceTo);
+    const n = Number(v);
+    if(Number.isInteger(n) && n>0 && n<100) raceTo = n;
+    draw();
+  });
+
+  // Winner check
+  function checkWinner(){
+    if(p1.score>=raceTo || p2.score>=raceTo){
+      stop();
+      const winner = p1.score>p2.score ? p1.name : p2.name;
+      alert(`${winner} wins the race to ${raceTo}!`);
+    }
+  }
+
+  // Start the clock on first interaction
+  ['p1Plus','p2Plus','p1Ext','p2Ext'].forEach(id=>{
+    el(id).addEventListener('click', () => { if(!t) start(); });
+  });
+
+  // Initial paint
+  draw();
+})();
+</script>
 </body>
 </html>
