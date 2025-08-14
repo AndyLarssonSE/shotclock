@@ -48,17 +48,17 @@ const UI = {
 };
 
 const ASSETS = {
-  waiting: 'assets/waiting-button.png',
-  playing: 'assets/playing-button.png',
-  start:   'assets/start-clock-button.png',
-  pause:   'assets/pause-clock-button.png',
-  running: 'assets/clock-running-button.png',
-  paused:  'assets/clock-paused-button.png',
-  pointStd:'assets/point-standard-button.png',
-  pointHit:'assets/point-pushed-button.png',
-  ext:     'assets/extension-button.png',
-  extCalled:'assets/extension-called-button.png',
-  reset:   'assets/reset-clock-button.png'
+  waiting: './assets/waiting-button.png',
+  playing: './assets/playing-button.png',
+  start:   './assets/start-clock-button.png',
+  pause:   './assets/pause-clock-button.png',
+  running: './assets/clock-running-button.png',
+  paused:  './assets/clock-paused-button.png',
+  pointStd:'./assets/point-standard-button.png',
+  pointHit:'./assets/point-pushed-button.png',
+  ext:     './assets/extension-button.png',
+  extCalled:'./assets/extension-called-button.png',
+  reset:   './assets/reset-clock-button.png'
 };
 
 // State
