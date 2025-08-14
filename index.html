@@ -1,0 +1,116 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <title>AndyLarsson.se - Pool & Billiard Timer</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main id="app" class="wrap">
+    <header class="topbar">
+      <div class="pill">
+        <span class="label">PLAYER1</span>
+        <span id="p1Score" class="score">0</span>
+      </div>
+
+      <div class="pill center">
+        <span class="label">RACE TO</span>
+        <span id="raceTo" class="score">8</span>
+      </div>
+
+      <div class="pill">
+        <span class="label">PLAYER2</span>
+        <span id="p2Score" class="score">0</span>
+      </div>
+    </header>
+
+    <section class="timer">
+      <div id="clock" class="bigtime">30</div>
+      <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    </section>
+
+    <section class="grid">
+      <!-- LEFT: Player 1 -->
+      <div class="col left">
+        <button id="p1StateBtn" class="imgbtn state" data-player="p1" aria-label="P1 state">
+          <img id="p1StateImg" src="../assets/waiting-button.png" alt="Waiting" />
+        </button>
+
+        <button id="p1PointBtn" class="imgbtn point" data-player="p1" aria-label="+1 point for Player 1">
+          <img id="p1PointImg" src="../assets/point-standard-button.png" alt="+1 Point" />
+        </button>
+
+        <button id="p1ExtBtn" class="imgbtn ext" data-player="p1" aria-label="Extension for Player 1">
+          <img id="p1ExtImg" src="../assets/extension-button.png" alt="Extension" />
+        </button>
+
+        <button id="p1EditNameBtn" class="imgbtn small" aria-label="Edit Player 1 name">
+          <img src="../assets/edit-player1-name-button.png" alt="Edit name" />
+        </button>
+      </div>
+
+      <!-- DIVIDER -->
+      <div class="divider">
+        <img src="../assets/divider.png" alt="" />
+      </div>
+
+      <!-- RIGHT: Player 2 -->
+      <div class="col right">
+        <button id="p2StateBtn" class="imgbtn state" data-player="p2" aria-label="P2 state">
+          <img id="p2StateImg" src="../assets/waiting-button.png" alt="Waiting" />
+        </button>
+
+        <button id="p2PointBtn" class="imgbtn point" data-player="p2" aria-label="+1 point for Player 2">
+          <img id="p2PointImg" src="../assets/point-standard-button.png" alt="+1 Point" />
+        </button>
+
+        <button id="p2ExtBtn" class="imgbtn ext" data-player="p2" aria-label="Extension for Player 2">
+          <img id="p2ExtImg" src="../assets/extension-button.png" alt="Extension" />
+        </button>
+
+        <button id="p2EditNameBtn" class="imgbtn small" aria-label="Edit Player 2 name">
+          <img src="../assets/edit-player2-name-button.png" alt="Edit name" />
+        </button>
+      </div>
+    </section>
+
+    <!-- BOTTOM CONTROLS -->
+    <section class="controls">
+      <button id="pauseBtn" class="imgbtn mid" aria-label="Pause clock">
+        <img id="pauseImg" src="../assets/pause-clock-button.png" alt="Pause" />
+      </button>
+
+      <button id="startBtn" class="imgbtn mid" aria-label="Start clock">
+        <img id="startImg" src="../assets/start-clock-button.png" alt="Start" />
+      </button>
+
+      <button id="resetClockBtn" class="imgbtn mid" aria-label="Reset clock">
+        <img id="resetClockImg" src="../assets/reset-clock-button.png" alt="Reset clock" />
+      </button>
+    </section>
+
+    <section class="bottom">
+      <button id="editRaceBtn" class="imgbtn small">
+        <img src="../assets/edit-race-button.png" alt="Edit race" />
+      </button>
+
+      <!-- Neutral text button (no asset provided) -->
+      <button id="resetScoreBtn" class="textbtn">RESET SCORE</button>
+    </section>
+
+    <!-- Names under state buttons -->
+    <footer class="names">
+      <div>
+        <span id="p1Name" class="playername">PLAYER1</span>
+      </div>
+      <div></div>
+      <div>
+        <span id="p2Name" class="playername">PLAYER2</span>
+      </div>
+    </footer>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
