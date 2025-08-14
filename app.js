@@ -96,9 +96,10 @@ function updateHeader(){
   UI.p2Name.textContent = S.p2.name.toUpperCase();
 }
 function setClockDisplay(sec){
+  function setClockDisplay(sec){
   const v = Math.max(0, Math.ceil(sec));
   UI.clock.textContent = v;
-  if(v <= 5 && v > 0) UI.clock.classList.add('red'); else UI.clock.classList.remove('red');
+  UI.clock.classList.toggle('red', v > 0 && v <= 20); // red from 9 → 1
 }
 function resetClock(to=30){ S.time = to; setClockDisplay(S.time); }
 function stopTimer(){
