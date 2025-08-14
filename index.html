@@ -224,6 +224,29 @@ let sec = 30, timer=null;
 
 const $ = sel => document.getElementById(sel);
 
+/* ---------- AUDIO (added, no design change) ---------- */
+let audioCtx;
+function unlockAudio(){
+  if(!audioCtx){
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+  if(audioCtx.state === 'suspended') audioCtx.resume();
+}
+// iOS/Safari: unlock audio on first user gesture
+window.addEventListener('pointerdown', unlockAudio, { once:true });
+
+function tone(freq=400, dur=120, type='sine', gain=0.06){
+  unlockAudio();
+  const osc = audioCtx.createOscillator();
+  const amp = audioCtx.createGain();
+  osc.type = type; osc.frequency.value = freq;
+  amp.gain.value = gain;                 // “loud but soft”
+  osc.connect(amp); amp.connect(audioCtx.destination);
+  osc.start(); setTimeout(()=>osc.stop(), dur);
+}
+function beep(){  tone(440, 110, 'sine',   0.50); }  // last 6-1s
+function buzz(){  tone(69, 650, 'square', 0.40); }  // at 0s
+
 function paint(){
   $('p1Name').textContent = p1.name;
   $('p2Name').textContent = p2.name;
@@ -255,9 +278,18 @@ function paint(){
 function tick(){
   sec = Math.max(0, sec-1);
   $('timer').textContent = sec;
-  if(sec===0){ stop(); }
+
+  // NEW: beep each second from 9 → 1
+  if (sec > 0 && sec <= 9) beep();
+
+  // NEW: buzz at 0 and stop
+  if (sec === 0){
+    buzz();
+    stop();
+  }
 }
 function start(){
+  unlockAudio();                // ensure audio is ready (no visual change)
   if(timer) return;
   timer = setInterval(tick, 1000);
   alert('CLOCK STARTED');
